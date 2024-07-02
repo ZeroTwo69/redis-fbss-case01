@@ -29,38 +29,8 @@ public class SeckillServiceImp extends ServiceImpl<SeckillMapper, Seckill> imple
 
     private static final String LOCK_KEY = "product_lock:"; //锁的key
 
-    /**
-     * 非阻塞型锁
-     * @param sid 订单id
-     * @param deductQuantity 购买数量
-     * @return 购买成功 返回 true 否则返回 false
-     */
-    @Override
-    public boolean deductStockById(Integer sid, Integer deductQuantity) {
-        //获取锁实例
-        RLock redissonLock =
-                redissonClient.getLock(LOCK_KEY + sid);
-        try {
-            // 1、获取锁 并设置过期时间 5秒
-            boolean tryLock =
-                    redissonLock
-                            .tryLock(10, 5, TimeUnit.SECONDS);
-            if (!tryLock) {
-                // 获取锁失败
-                return false;
-            }
-            // 2、执行业务代码
-            return deductStock(sid, deductQuantity); //业务代码
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            // 3、释放锁
-            redissonLock.unlock();
-        }
-    }
-
 //    /**
-//     * 阻塞型锁
+//     * 非阻塞型锁
 //     * @param sid 订单id
 //     * @param deductQuantity 购买数量
 //     * @return 购买成功 返回 true 否则返回 false
@@ -72,14 +42,44 @@ public class SeckillServiceImp extends ServiceImpl<SeckillMapper, Seckill> imple
 //                redissonClient.getLock(LOCK_KEY + sid);
 //        try {
 //            // 1、获取锁 并设置过期时间 5秒
-//            redissonLock.lock(5, TimeUnit.SECONDS);
+//            boolean tryLock =
+//                    redissonLock
+//                            .tryLock(10, 5, TimeUnit.SECONDS);
+//            if (!tryLock) {
+//                // 获取锁失败
+//                return false;
+//            }
 //            // 2、执行业务代码
 //            return deductStock(sid, deductQuantity); //业务代码
-//        }finally {
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } finally {
 //            // 3、释放锁
 //            redissonLock.unlock();
 //        }
 //    }
+
+    /**
+     * 阻塞型锁
+     * @param sid 订单id
+     * @param deductQuantity 购买数量
+     * @return 购买成功 返回 true 否则返回 false
+     */
+    @Override
+    public boolean deductStockById(Integer sid, Integer deductQuantity) {
+        //获取锁实例
+        RLock redissonLock =
+                redissonClient.getLock(LOCK_KEY + sid);
+        try {
+            // 1、获取锁 并设置过期时间 5秒
+            redissonLock.lock(5, TimeUnit.SECONDS);
+            // 2、执行业务代码
+            return deductStock(sid, deductQuantity); //业务代码
+        }finally {
+            // 3、释放锁
+            redissonLock.unlock();
+        }
+    }
 
 
 
