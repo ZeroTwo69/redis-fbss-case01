@@ -1,0 +1,16 @@
+server:
+  port: 8010
+spring:
+  application:
+    name: user-service
+  redis: #redis配置
+    host: 127.0.0.1 # 设连接地址
+    port: 6379 # 端口号
+    database: 1 # 放到几号口
+  cloud:
+    nacos: #nacos配置
+      discovery:
+        server-addr: 127.0.0.1:8848
+feign: #feign配置
+  sentinel:
+    enabled: true #开启feign的sentinel

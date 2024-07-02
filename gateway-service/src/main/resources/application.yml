@@ -1,0 +1,23 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: gateway-api
+  cloud:
+    nacos: #nacos配置
+      discovery:
+        server-addr: 127.0.0.1:8848
+#    sentinel: #sentinel配置
+#      transport:
+#        dashboard: localhost:8080 #配置Sentinel dashboard控制台服务地址
+#        port: 8719 #默认8719端口，假如被占用会自动从8719开始依次+1扫描,直至找到未被占用的端口 跟控制台交流的端口号 随意
+    gateway: #gateway 配置
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能，利用Spring Cloud Gateway的Route定义，实现动态路由
+#  zipkin: #zipkin配置
+#    base-url: http://127.0.0.1:9411/ #zipkin server的请求地址
+#    discoveryClientEnabled: false #让nacos把它当成一个URL，而不要当做服务名
+#  sleuth: #链路追踪配置
+#    sampler:
+#       probability: 1.0 #采样的百分比

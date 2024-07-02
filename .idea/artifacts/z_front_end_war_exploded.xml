@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="z-front-end:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/z_front_end_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="z-front-end/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="z-front-end" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
